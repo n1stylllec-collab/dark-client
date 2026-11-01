@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>dark client ecosystem</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background-color: #000; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        
+        /* Шапка сайта */
+        .header { position: absolute; top: 40px; width: 100%; display: flex; justify-content: space-between; padding: 0 60px; z-index: 5; }
+        .btn { background: transparent; border: 2px solid #00ffaa; color: #00ffaa; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: bold; text-decoration: none; display: inline-block; transition: all 0.2s ease; outline: none; }
+        .btn:hover { background-color: rgba(0, 255, 170, 0.1); box-shadow: 0 0 10px rgba(0, 255, 170, 0.3); }
+        
+        /* Выпадающее меню проектов */
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content { display: none; position: absolute; left: 0; top: 50px; background-color: #111; border: 2px solid #00ffaa; border-radius: 12px; min-width: 220px; z-index: 10; overflow: hidden; }
+        .dropdown-content button { background: transparent; border: none; width: 100%; text-align: left; color: #00ffaa; padding: 12px 16px; cursor: pointer; font-size: 16px; font-weight: bold; display: block; outline: none; }
+        .dropdown-content button:hover { background-color: rgba(0, 255, 170, 0.2); }
+        .dropdown:hover .dropdown-content { display: block; }
+        
+        /* Управление видимостью страниц */
+        .page { display: none; text-align: center; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Контент страниц */
+        .title { color: #00ffaa; font-size: 56px; font-weight: bold; margin-bottom: 15px; }
+        .subtitle { color: #00aa77; font-size: 14px; margin-bottom: 50px; letter-spacing: 0.5px; }
+        .download-box { display: flex; gap: 30px; justify-content: center; }
+        
+        /* Стилистика окна поддержки под твой дизайн */
+        .support-container { width: 450px; background: #000; border: 2px solid #00ffaa; border-radius: 16px; padding: 30px; text-align: left; box-shadow: 0 0 20px rgba(0, 255, 170, 0.1); }
+        .support-container h2 { color: #00ffaa; font-size: 32px; font-weight: bold; margin-bottom: 5px; text-align: center; }
+        .support-container .sub { color: #00aa77; font-size: 12px; margin-bottom: 25px; text-align: center; letter-spacing: 0.5px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; color: #00ffaa; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+        .form-input { width: 100%; background: #111; border: 2px solid #00aa77; border-radius: 12px; padding: 12px; color: #fff; font-size: 16px; outline: none; transition: border 0.2s; }
+        .form-input:focus { border-color: #00ffaa; }
+        textarea.form-input { resize: none; height: 120px; }
+        .submit-btn { width: 100%; margin-top: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <!-- Шапка экосистемы -->
+    <div class="header">
+        <div class="dropdown">
+            <button class="btn">наши проекты</button>
+            <div class="dropdown-content">
+                <button onclick="showPage('telegram')">dark client telegram</button>
+                <button onclick="showPage('discord')">dark client discord</button>
+                <button onclick="showPage('browser')">dark client browser</button>
+            </div>
+        </div>
+        <button class="btn" onclick="showPage('support')">поддержка</button>
+    </div>
+
+    <!-- Сайт 1: Telegram -->
+    <div id="telegram" class="page active">
+        <h1 class="title">dark client telegram</h1>
+        <p class="subtitle">нам можно доверять</p>
+        <div class="download-box">
+            <button class="btn" onclick="alert('Скачивание для Windows началось')">скачать Windows</button>
+            <button class="btn" onclick="alert('Скачивание для Android началось')">скачать Android</button>
+        </div>
+    </div>
+
+    <!-- Сайт 2: Discord -->
+    <div id="discord" class="page">
+        <h1 class="title">dark client discord</h1>
+        <p class="subtitle">нам можно доверять</p>
+        <div class="download-box">
+            <button class="btn" onclick="alert('Скачивание для Windows началось')">скачать Windows</button>
+            <button class="btn" onclick="alert('Скачивание для Android началось')">скачать Android</button>
+        </div>
+    </div>
+
+    <!-- Сайт 3: Browser -->
+    <div id="browser" class="page">
+        <h1 class="title">dark client browser</h1>
+        <p class="subtitle">нам можно доверять</p>
+        <div class="download-box">
+            <button class="btn" onclick="alert('Скачивание для Windows началось')">скачать Windows</button>
+            <button class="btn" onclick="alert('Скачивание для Android началось')">скачать Android</button>
+        </div>
+    </div>
+
+    <!-- Раздел Поддержки -->
+    <div id="support" class="page">
+        <div class="support-container">
+            <h2>поддержка</h2>
+            <p class="sub">сообщить о баге или проблеме</p>
+            
+            <form onsubmit="sendDiscordWebhook(event)">
+                <div class="form-group">
+                    <label>Твой ник (Discord / Telegram) или Email:</label>
+                    <input type="text" id="userContact" class="form-input" placeholder="Например: @username" required>
+                </div>
+                <div class="form-group">
+                    <label>Что именно не работает? (Жалоба):</label>
+                    <textarea id="userMessage" class="form-input" placeholder="Опиши баг или проблему..." required></textarea>
+                </div>
+                <button type="submit" id="submitBtn" class="btn submit-btn">Отправить жалобу</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function sendDiscordWebhook(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = 'Отправка...';
+            submitBtn.disabled = true;
+
+            const contact = document.getElementById('userContact').value;
+            const message = document.getElementById('userMessage').value;
+
+            // Ссылка на твой рабочий вебхук
+            const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1566132501104173106/_PWOZfBhQlCbL5rzzqHCfzedlcECL3i1thMj1xHCFYdAklNZmgQWVaulSXlxmpYkd1UV';
+
+            const payload = {
+                embeds: [{
+                    title: "⚠️ Новая жалоба с сайта",
+                    color: 65450, // Неоново-зеленый цвет полоски карточки
+                    fields: [
+                        { name: "👤 Отправитель:", value: contact, inline: false },
+                        { name: "💬 Описание проблемы:", value: message, inline: false }
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            // Отправка в Дискорд
+            fetch(DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Жалоба успешно отправлена! Мы разберемся.');
+                    document.getElementById('userContact').value = '';
+                    document.getElementById('userMessage').value = '';
+                    showPage('telegram');
+                } else {
+                    alert('Ошибка отправки. Убедись, что вебхук на сервере не удален.');
+                }
+            })
+            .catch(error => {
+                alert('Ошибка сети.');
+                console.error(error);
+            })
+            .finally(() => {
+                submitBtn.innerText = 'Отправить жалобу';
+                submitBtn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
